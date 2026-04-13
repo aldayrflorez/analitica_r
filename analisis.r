@@ -25,3 +25,9 @@ plot(
   col = "blue",
   pch = 19
 )
+
+View(penguins)
+
+datos_pinguinos <- data.frame(penguins)
+
+summary(datos_pinguinos)
