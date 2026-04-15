@@ -1,3 +1,4 @@
+"""
 # Crear un dataset simple
 datos <- data.frame(
   nombre = c("Ana", "Luis", "Carlos", "Marta"),
@@ -25,9 +26,37 @@ plot(
   col = "blue",
   pch = 19
 )
-
+"""
 View(penguins)
-
-datos_pinguinos <- data.frame(penguins)
-
+datos_pinguinos <- penguins
+glimpse(datos_pinguinos)
 summary(datos_pinguinos)
+
+# Paquete ggplot - Crear grafico
+ggplot(
+  data = datos_pinguinos,
+  mapping = aes(x = flipper_len, y = body_mass)
+) + 
+  geom_point(mapping = aes(color = species)) +
+  geom_smooth(method = "lm") +
+  labs(
+    title = "Grafico", 
+    subtitle = "Peso del pinguino contra la longitud de sus aletas",
+    x = "Peso de los pinguinos (g)",
+    y = "Longitud de las aletas (mm)",
+    color = "Tipo de especie"
+  )
+
+# Visualizar distribuciones
+ggplot(
+  datos_pinguinos, 
+  aes(x = fct_infreq(species))
+) +
+  geom_bar() +
+  labs(
+    title = "Distribucion de especies",
+    x = "Especies"
+  )
+
+
+
