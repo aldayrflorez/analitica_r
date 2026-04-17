@@ -1,32 +1,12 @@
-"""
-# Crear un dataset simple
-datos <- data.frame(
-  nombre = c("Ana", "Luis", "Carlos", "Marta"),
-  edad = c(23, 30, 28, 35),
-  salario = c(1200, 1500, 1400, 2500)
-)
+library(ggplot2)
+library(dplyr)
+library(forcats)
+library(nycflights13)
 
-# Ver los datos
-print(datos)
+# ===============================================================
+# Libreria ggplot
+# ===============================================================
 
-# Resumen estadístico
-summary(datos)
-
-# Promedio de salarios
-promedio_salario <- mean(datos$salario)
-print(paste("Promedio salario:", promedio_salario))
-
-# Gráfico sencillo
-plot(
-  datos$edad,
-  datos$salario,
-  main = "Edad vs Salario",
-  xlab = "Edad",
-  ylab = "Salario",
-  col = "blue",
-  pch = 19
-)
-"""
 View(penguins)
 datos_pinguinos <- penguins
 glimpse(datos_pinguinos)
@@ -47,7 +27,7 @@ ggplot(
     color = "Tipo de especie"
   )
 
-# Visualizar distribuciones
+# Visualizar distribuciones - Categorias
 ggplot(
   datos_pinguinos, 
   aes(x = fct_infreq(species))
@@ -58,5 +38,66 @@ ggplot(
     x = "Especies"
   )
 
+ggplot(datos_pinguinos, aes(x = year)) + geom_bar()
 
+# Visualizar distribuciones - Numericas
+ggplot(datos_pinguinos, aes(x = body_mass)) + 
+  geom_histogram(binwidth = 300) # Longitud o ancho de los intervalos de la grafica
+
+ggplot(datos_pinguinos, aes(x = body_mass, color = species)) + geom_density() # Muestra la simetria de los datos
+
+ggplot(datos_pinguinos, aes(x = species, y = body_mass)) + geom_boxplot() # Muestra datos atipicos (Se salen de lo normal)
+
+# Visualizar distribuciones - 2 variables categoricas
+ggplot(datos_pinguinos, aes(x = island, fill = species)) + 
+  geom_bar(
+    position = "fill"
+  ) 
+
+# Visualizar datos en distintos graficos
+ggplot(datos_pinguinos, aes(x = flipper_len, y = body_mass)) +
+  geom_point(aes(color = species)) +
+  facet_wrap(~island) +
+  labs(
+    title = "Grafico", 
+    subtitle = "Peso del pinguino contra la longitud de sus aletas",
+    x = "Peso de los pinguinos (g)",
+    y = "Longitud de las aletas (mm)",
+    color = "Tipo de especie"
+  )
+
+# ===============================================================
+# Libreria dplyr
+# ===============================================================
+
+# Tuberias = Pipelines
+
+View(flights) # Ver dataset
+str(flights) # Ver estructura
+
+"""
+year, month, day: Año, mes, día.
+dep_time, arr_time: Hora de salida y llegada (formato HHMM).
+sched_dep_time: Hora de salida programada.
+dep_delay, arr_delay: Retraso en salida/llegada (en minutos).
+carrier: Código de la aerolínea.
+flight: Número de vuelo.
+tailnum: Matrícula del avión.
+origin, dest: Aeropuerto de origen y destino.
+air_time: Tiempo de vuelo en minutos.
+distance: Distancia entre aeropuertos. 
+"""
+
+flights <- flights
+glimpse(flights)
+summary(flights)
+
+promedio_vuelos <- 
+  flights |> 
+  filter(dest == "MIA") |> 
+  summarise(tiempo_de_vuelo = mean(arr_delay, na.rm = T), .by = c(year, month, day)) 
+
+View(promedio_vuelos)
+# .by agrupa temporalmente los datos, solo funciona dentro de esta funcion y el dataset no queda agrupado despues
+# na.rm = omite datos nulos
 
