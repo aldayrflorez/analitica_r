@@ -70,8 +70,6 @@ ggplot(datos_pinguinos, aes(x = flipper_len, y = body_mass)) +
 # Libreria dplyr
 # ===============================================================
 
-# Tuberias = Pipelines
-
 View(flights) # Ver dataset
 str(flights) # Ver estructura
 
@@ -92,18 +90,34 @@ flights <- flights
 glimpse(flights)
 summary(flights)
 
+# .by agrupa temporalmente los datos, solo funciona dentro de esta funcion y el dataset no queda agrupado despues
+# na.rm = omite datos nulos
+# Tuberias = Pipelines
+
+# Promedio de vuelos hacia Miami con retraso de 2 horas
 promedio_vuelos <- 
   flights |> 
   filter(dest == "MIA" & arr_delay > 120) |> 
   summarise(tiempo_promedio_vuelo = mean(arr_delay, na.rm = T), .by = c(year,month,day, arr_delay))
 View(promedio_vuelos)
 
+# Vuelos en los meses de enero a mayo
 vuelos_meses_1_5 <-
   flights |> 
   filter(month %in% c(1,5), dest == "MIA", carrier =="UA") |> 
   arrange(dest) |> 
   select(origin, dest, carrier)
 
-# .by agrupa temporalmente los datos, solo funciona dentro de esta funcion y el dataset no queda agrupado despues
-# na.rm = omite datos nulos
+# Vuelos con retraso mayor a 2 horas
+retraso_mayor_2_horas <- 
+  flights |> 
+  filter(arr_delay > -2)
+
+# Vuelos a Houston
+vuelo_houston <- 
+  flights |> 
+  filter(origin == "IAH")
+
+
+
 
