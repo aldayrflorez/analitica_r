@@ -118,6 +118,10 @@ vuelo_houston <-
   flights |> 
   filter(origin == "IAH")
 
+# Vuelos que salieron a tiempo, pero llegaron mas de 2h tarde
+retraso_llegada <-
+  flights |>
+  filter(dep_delay >= 0 & arr_delay < 0)
 
 
 
