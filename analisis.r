@@ -94,10 +94,16 @@ summary(flights)
 
 promedio_vuelos <- 
   flights |> 
-  filter(dest == "MIA") |> 
-  summarise(tiempo_de_vuelo = mean(arr_delay, na.rm = T), .by = c(year, month, day)) 
-
+  filter(dest == "MIA" & arr_delay > 120) |> 
+  summarise(tiempo_promedio_vuelo = mean(arr_delay, na.rm = T), .by = c(year,month,day, arr_delay))
 View(promedio_vuelos)
+
+vuelos_meses_1_5 <-
+  flights |> 
+  filter(month %in% c(1,5), dest == "MIA", carrier =="UA") |> 
+  arrange(dest) |> 
+  select(origin, dest, carrier)
+
 # .by agrupa temporalmente los datos, solo funciona dentro de esta funcion y el dataset no queda agrupado despues
 # na.rm = omite datos nulos
 
