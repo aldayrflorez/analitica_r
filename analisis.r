@@ -70,29 +70,34 @@ ggplot(datos_pinguinos, aes(x = flipper_len, y = body_mass)) +
 # Libreria dplyr
 # ===============================================================
 
-View(flights) # Ver dataset
-str(flights) # Ver estructura
-
 """
-year, month, day: Año, mes, día.
-dep_time, arr_time: Hora de salida y llegada (formato HHMM).
+year: Año.
+month: Mes.
+day: Dia.
+dep_time: Hora de salida. (formato HHMM).
+arr_time: Hora de llegada. (formato HHMM).
 sched_dep_time: Hora de salida programada.
-dep_delay, arr_delay: Retraso en salida/llegada (en minutos).
+dep_delay: Retraso en salida/llegada (en minutos).
+arr_delay: Retraso en llegada (en minutos)
 carrier: Código de la aerolínea.
 flight: Número de vuelo.
 tailnum: Matrícula del avión.
-origin, dest: Aeropuerto de origen y destino.
+origin: Aeropuerto de origen.
+dest: Aeropuerto de destino.
 air_time: Tiempo de vuelo en minutos.
 distance: Distancia entre aeropuertos. 
 """
 
-flights <- flights
-glimpse(flights)
-summary(flights)
-
-# .by agrupa temporalmente los datos, solo funciona dentro de esta funcion y el dataset no queda agrupado despues
-# na.rm = omite datos nulos
+# .by(c()) -> agrupa temporalmente los datos, solo funciona dentro de esta funcion y el dataset no queda agrupado despues
+# na.rm = T -> omite datos nulos
 # Tuberias = Pipelines
+# Arrange() = Ordenas por columna
+
+flights <- flights # Asignar el dataset a una variable proxima a utilizar
+glimpse(flights) # Resumen de columnas y los primeros datos
+View(flights) # Ver dataset
+str(flights) # Ver estructura del dataset
+summary(flights) # Ver medidas basicas
 
 # Promedio de vuelos hacia Miami con retraso de 2 horas
 promedio_vuelos <- 
@@ -121,7 +126,19 @@ vuelo_houston <-
 # Vuelos que salieron a tiempo, pero llegaron mas de 2h tarde
 retraso_llegada <-
   flights |>
-  filter(dep_delay >= 0 & arr_delay < 0)
+  filter(dep_delay >= 0 & arr_delay <= -2)
 
+# Ordenar filas, por defecto ordena de mayor a menor desc() -> Ordena de mayor a menor
+ordenar_origen <-
+  flights |> 
+  arrange(desc(origin))
 
+# distinct() -> Filas unicas del conjunto de datos
 
+destinos_unicos <-
+  flights |> 
+  distinct(dest)
+
+flights |> 
+  summarise(vuelos = sum(flight), .by = (dest)) |> 
+  rename(Origen = dest)
