@@ -93,7 +93,8 @@ distance: Distancia entre aeropuertos.
 # .by(c()) -> agrupa temporalmente los datos, solo funciona dentro de esta funcion y el dataset no queda agrupado despues
 # na.rm = T -> omite datos nulos
 # Tuberias = Pipelines
-# Arrange() = Ordenas por columna
+# Arrange() -> Ordenas por columna
+# .keep_all = TRUE -> Mantiene todo el dataframe
 
 flights <- flights # Asignar el dataset a una variable proxima a utilizar
 glimpse(flights) # Resumen de columnas y los primeros datos
@@ -133,19 +134,29 @@ retraso_llegada <-
   flights |>
   filter(dep_delay >= 0 & arr_delay <= -2)
 
-# Ordenar filas, por defecto ordena de mayor a menor desc() -> Ordena de mayor a menor
+# Ordenar filas, por defecto ordena de mayor a menor desc() -> Ordena de menor a mayor
 ordenar_origen <-
   flights |>
   arrange(desc(origin))
 
 # distinct() -> Filas unicas del conjunto de datos
-
 destinos_unicos <-
   flights |>
-  distinct(dest)
+  distinct(origin, .keep_all = TRUE) |> 
+  arrange(origin)
+
+  flights |>
+  distinct(origin, dest, .keep_all = TRUE) |> 
+  arrange(month, dest)
 
 # Total de aviones con destino a MIA entre las 8-10am
 flights |>
   filter(dest == "MIA" & month == c(1, 5) & hour == c(8, 10)) |>
   summarise(vuelos = sum(flight), .by = (tailnum)) |>
   rename(placas = tailnum)
+
+# Total de vuelos en cada mes
+flights |> 
+  filter(origin == "LGA") |> 
+  summarise(total_vuelos = sum(flight), .by = (month)) |> 
+  arrange(month)
