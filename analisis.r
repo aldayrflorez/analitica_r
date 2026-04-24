@@ -16,11 +16,11 @@ summary(datos_pinguinos)
 ggplot(
   data = datos_pinguinos,
   mapping = aes(x = flipper_len, y = body_mass)
-) + 
+) +
   geom_point(mapping = aes(color = species)) +
   geom_smooth(method = "lm") +
   labs(
-    title = "Grafico", 
+    title = "Grafico",
     subtitle = "Peso del pinguino contra la longitud de sus aletas",
     x = "Peso de los pinguinos (g)",
     y = "Longitud de las aletas (mm)",
@@ -29,7 +29,7 @@ ggplot(
 
 # Visualizar distribuciones - Categorias
 ggplot(
-  datos_pinguinos, 
+  datos_pinguinos,
   aes(x = fct_infreq(species))
 ) +
   geom_bar() +
@@ -41,7 +41,7 @@ ggplot(
 ggplot(datos_pinguinos, aes(x = year)) + geom_bar()
 
 # Visualizar distribuciones - Numericas
-ggplot(datos_pinguinos, aes(x = body_mass)) + 
+ggplot(datos_pinguinos, aes(x = body_mass)) +
   geom_histogram(binwidth = 300) # Longitud o ancho de los intervalos de la grafica
 
 ggplot(datos_pinguinos, aes(x = body_mass, color = species)) + geom_density() # Muestra la simetria de los datos
@@ -49,17 +49,17 @@ ggplot(datos_pinguinos, aes(x = body_mass, color = species)) + geom_density() # 
 ggplot(datos_pinguinos, aes(x = species, y = body_mass)) + geom_boxplot() # Muestra datos atipicos (Se salen de lo normal)
 
 # Visualizar distribuciones - 2 variables categoricas
-ggplot(datos_pinguinos, aes(x = island, fill = species)) + 
+ggplot(datos_pinguinos, aes(x = island, fill = species)) +
   geom_bar(
     position = "fill"
-  ) 
+  )
 
 # Visualizar datos en distintos graficos
 ggplot(datos_pinguinos, aes(x = flipper_len, y = body_mass)) +
   geom_point(aes(color = species)) +
   facet_wrap(~island) +
   labs(
-    title = "Grafico", 
+    title = "Grafico",
     subtitle = "Peso del pinguino contra la longitud de sus aletas",
     x = "Peso de los pinguinos (g)",
     y = "Longitud de las aletas (mm)",
@@ -70,7 +70,8 @@ ggplot(datos_pinguinos, aes(x = flipper_len, y = body_mass)) +
 # Libreria dplyr
 # ===============================================================
 
-"""
+""
+"
 year: Año.
 month: Mes.
 day: Dia.
@@ -86,7 +87,8 @@ origin: Aeropuerto de origen.
 dest: Aeropuerto de destino.
 air_time: Tiempo de vuelo en minutos.
 distance: Distancia entre aeropuertos. 
-"""
+"
+""
 
 # .by(c()) -> agrupa temporalmente los datos, solo funciona dentro de esta funcion y el dataset no queda agrupado despues
 # na.rm = T -> omite datos nulos
@@ -100,27 +102,30 @@ str(flights) # Ver estructura del dataset
 summary(flights) # Ver medidas basicas
 
 # Promedio de vuelos hacia Miami con retraso de 2 horas
-promedio_vuelos <- 
-  flights |> 
-  filter(dest == "MIA" & arr_delay > 120) |> 
-  summarise(tiempo_promedio_vuelo = mean(arr_delay, na.rm = T), .by = c(year,month,day, arr_delay))
+promedio_vuelos <-
+  flights |>
+  filter(dest == "MIA" & arr_delay > 120) |>
+  summarise(
+    tiempo_promedio_vuelo = mean(arr_delay, na.rm = T),
+    .by = c(year, month, day, arr_delay)
+  )
 View(promedio_vuelos)
 
 # Vuelos en los meses de enero a mayo
 vuelos_meses_1_5 <-
-  flights |> 
-  filter(month %in% c(1,5), dest == "MIA", carrier =="UA") |> 
-  arrange(dest) |> 
+  flights |>
+  filter(month %in% c(1, 5), dest == "MIA", carrier == "UA") |>
+  arrange(dest) |>
   select(origin, dest, carrier)
 
 # Vuelos con retraso mayor a 2 horas
-retraso_mayor_2_horas <- 
-  flights |> 
+retraso_mayor_2_horas <-
+  flights |>
   filter(arr_delay > -2)
 
 # Vuelos a Houston
-vuelo_houston <- 
-  flights |> 
+vuelo_houston <-
+  flights |>
   filter(origin == "IAH")
 
 # Vuelos que salieron a tiempo, pero llegaron mas de 2h tarde
@@ -130,15 +135,16 @@ retraso_llegada <-
 
 # Ordenar filas, por defecto ordena de mayor a menor desc() -> Ordena de mayor a menor
 ordenar_origen <-
-  flights |> 
+  flights |>
   arrange(desc(origin))
 
 # distinct() -> Filas unicas del conjunto de datos
 
 destinos_unicos <-
-  flights |> 
+  flights |>
   distinct(dest)
 
-flights |> 
-  summarise(vuelos = sum(flight), .by = (dest)) |> 
+# Total de vuelos a los destinos
+flights |>
+  summarise(vuelos = sum(flight), .by = (dest)) |>
   rename(Origen = dest)
