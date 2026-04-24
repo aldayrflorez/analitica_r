@@ -144,7 +144,8 @@ destinos_unicos <-
   flights |>
   distinct(dest)
 
-# Total de vuelos a los destinos
+# Total de aviones con destino a MIA entre las 8-10am
 flights |>
-  summarise(vuelos = sum(flight), .by = (dest)) |>
-  rename(Origen = dest)
+  filter(dest == "MIA" & month == c(1, 5) & hour == c(8, 10)) |>
+  summarise(vuelos = sum(flight), .by = (tailnum)) |>
+  rename(placas = tailnum)
