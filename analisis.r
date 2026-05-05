@@ -160,3 +160,20 @@ flights |>
   filter(origin == "LGA") |> 
   summarise(total_vuelos = sum(flight), .by = (month)) |> 
   arrange(month)
+
+# Count
+flights |> 
+  count(origin, dest, sort = T)
+
+# Mutate - Agrega columnas calculadas al dataframe
+# .before - Donde queremos ver las columnas que se calculan
+flights |> 
+  mutate(
+    recuperacion_vuelo = dep_delay - arr_delay,
+    velocidad_vuelo = (distance * 1.60934) / (air_time / 60),
+    .before = 1,
+    .keep = "used"
+  )
+
+flights |> 
+  select(where(is.character))
