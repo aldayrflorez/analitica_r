@@ -172,8 +172,16 @@ flights |>
     recuperacion_vuelo = dep_delay - arr_delay,
     velocidad_vuelo = (distance * 1.60934) / (air_time / 60),
     .before = 1,
-    .keep = "used"
-  )
+  ) 
 
+# starts_with selecciona todas los nombres de las columnas que coincidan con el prefijo dep
 flights |> 
-  select(where(is.character))
+  select(starts_with("dep"))
+
+# Selecciona un rango de columnas inicio:fin
+flights |> 
+  select(dep_time:carrier)
+
+# abny_of(c("a","b")) me trae las variables del dataframe, cuando no existe una no lanza error
+flights |> 
+  select(any_of(c("dep_delay", "arr_delay", "vinotinto")))
