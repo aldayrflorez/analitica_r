@@ -185,3 +185,8 @@ flights |>
 # abny_of(c("a","b")) me trae las variables del dataframe, cuando no existe una no lanza error
 flights |> 
   select(any_of(c("dep_delay", "arr_delay", "vinotinto")))
+
+# Recolocate = Cambio de posicion de columnas ".after" - ".before" antes o despues de las columnas mencionadas
+# Toma las columnas con iniciales arr y las ubica antes de dep_delay
+flights |> 
+  relocate(starts_with("arr"), .before = dep_delay)
