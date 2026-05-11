@@ -190,3 +190,11 @@ flights |>
 # Toma las columnas con iniciales arr y las ubica antes de dep_delay
 flights |> 
   relocate(starts_with("arr"), .before = dep_delay)
+
+flights |> 
+  group_by(month) |> 
+  summarise(
+    Promedio_vuelo = mean(dep_delay, na.rm = T)
+  )
+
+
