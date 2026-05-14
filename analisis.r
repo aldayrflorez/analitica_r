@@ -2,6 +2,7 @@ library(ggplot2)
 library(dplyr)
 library(forcats)
 library(nycflights13)
+library(tidyr)
 
 # ===============================================================
 # Libreria ggplot
@@ -182,7 +183,7 @@ flights |>
 flights |> 
   select(dep_time:carrier)
 
-# abny_of(c("a","b")) me trae las variables del dataframe, cuando no existe una no lanza error
+# any_of(c("a","b")) me trae las variables del dataframe, cuando no existe una no lanza error
 flights |> 
   select(any_of(c("dep_delay", "arr_delay", "vinotinto")))
 
@@ -197,4 +198,47 @@ flights |>
     Promedio_vuelo = mean(dep_delay, na.rm = T)
   )
 
+# Conteo de vuelo (Cuenta las filas)
+flights |> 
+  group_by(carrier) |> 
+  summarise(
+    Media_vuelos = mean(flight),
+    Cantidad_vuelos = n()
+  ) |> 
+  arrange(desc(Cantidad_vuelos))
+  
+# Slice = Cortan el conjunto de datos con base a los parametros
 
+flights |> 
+  group_by(dest) |> 
+  slice_min(arr_delay, n = 10) |> 
+  relocate(dest, arr_delay) 
+
+# .by para agrupar
+flights |> 
+  summarise(
+    avg_vuelos = mean(flight),
+    n = n(),
+    .by = c(origin,dest)
+  )
+
+# Organizar columnas, limpiar datos - pivot 
+
+View(billboard)
+glimpse(billboard)
+billboard <- billboard
+
+billboard_rank <- 
+  billboard |> 
+  pivot_longer(
+    cols = starts_with("wk"),
+    names_to = "week",
+    values_to = "ranking",
+    values_drop_na = T
+  )
+
+billboard_rank |> 
+  group_by(week) |> 
+  summarise(
+    promedio_ranking = mean(ranking)
+  ) 
